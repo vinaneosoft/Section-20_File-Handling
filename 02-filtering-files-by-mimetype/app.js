@@ -13,7 +13,7 @@ const errorController = require('./controllers/error');
 const User = require('./models/user');
 
 const MONGODB_URI =
-  'mongodb+srv://maximilian:9u4biljMQc4jjqbe@cluster0-ntrwp.mongodb.net/shop';
+  'mongodb+srv://root:root@cluster0.nhepvqi.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0';
 
 const app = express();
 const store = new MongoDBStore({
@@ -101,6 +101,7 @@ app.use(errorController.get404);
 app.use((error, req, res, next) => {
   // res.status(error.httpStatusCode).render(...);
   // res.redirect('/500');
+  console.log("session in error middleware", req.session);
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',

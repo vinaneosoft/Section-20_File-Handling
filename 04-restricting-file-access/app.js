@@ -13,7 +13,7 @@ const errorController = require('./controllers/error');
 const User = require('./models/user');
 
 const MONGODB_URI =
-  'mongodb+srv://maximilian:9u4biljMQc4jjqbe@cluster0-ntrwp.mongodb.net/shop';
+   'mongodb+srv://root:root@cluster0.nhepvqi.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0';
 
 const app = express();
 const store = new MongoDBStore({
@@ -22,14 +22,16 @@ const store = new MongoDBStore({
 });
 const csrfProtection = csrf();
 
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'images');
+const fileStorage= multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'images/'); // Folder where files will be saved
   },
-  filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + '-' + file.originalname);
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname)); // e.g. 1625155565-123456789.jpg
   }
 });
+
 
 const fileFilter = (req, file, cb) => {
   if (
@@ -52,7 +54,7 @@ const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+  multer({ storage: fileStorage}).single('image')
 );
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
@@ -102,6 +104,8 @@ app.use(errorController.get404);
 app.use((error, req, res, next) => {
   // res.status(error.httpStatusCode).render(...);
   // res.redirect('/500');
+  console.log(error);
+  
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',

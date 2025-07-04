@@ -20,7 +20,9 @@ exports.postAddProduct = (req, res, next) => {
   const image = req.file;
   const price = req.body.price;
   const description = req.body.description;
-  if (!image) {
+  console.log(image);
+  
+ /*  if (!image) {
     return res.status(422).render('admin/edit-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
@@ -73,25 +75,10 @@ exports.postAddProduct = (req, res, next) => {
       res.redirect('/admin/products');
     })
     .catch(err => {
-      // return res.status(500).render('admin/edit-product', {
-      //   pageTitle: 'Add Product',
-      //   path: '/admin/add-product',
-      //   editing: false,
-      //   hasError: true,
-      //   product: {
-      //     title: title,
-      //     imageUrl: imageUrl,
-      //     price: price,
-      //     description: description
-      //   },
-      //   errorMessage: 'Database operation failed, please try again.',
-      //   validationErrors: []
-      // });
-      // res.redirect('/500');
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
-    });
+    }); */
 };
 
 exports.getEditProduct = (req, res, next) => {
